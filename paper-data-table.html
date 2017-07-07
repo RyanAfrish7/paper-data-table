@@ -20,11 +20,21 @@ Polymer element for the Data Table component of Material Design
         @apply --paper-font-common-base;
       }
 
+      div.toolbar {
+        height: 64px
+      }
+
       .title {
         @apply --paper-font-title;
         font-weight: normal;
         line-height: 64px;
         margin-left: 24px;
+      }
+
+      .info {
+        line-height: 64px;
+        margin-left: 24px;
+        color: var(--primary-color);
       }
 
       paper-checkbox {
@@ -36,7 +46,7 @@ Polymer element for the Data Table component of Material Design
       table {
         /*border-spacing: 24px 0;*/
         border-collapse: collapse;
-      / / width: 100 %;
+        // width: 100 %;
       }
 
       td, th {
@@ -90,13 +100,22 @@ Polymer element for the Data Table component of Material Design
 
     </style>
 
-    <div class="title">[[title]]</div>
+    <template is="dom-if" if="[[_showTitleBar]]">
+      <div class="toolbar">
+        <div class="title">[[title]]</div>
+      </div>
+    </template>
+    <template is="dom-if" if="[[!_showTitleBar]]">
+      <div class="toolbar">
+        <div class="info">[[_selectionText]]</div>
+      </div>
+    </template>
     <table>
       <tbody>
       <tr class="header">
         <template is="dom-if" if="[[selectable]]">
           <td class="checkbox-container">
-            <paper-checkbox id="toggleAll" on-checked-changed="toggleAll"></paper-checkbox>
+            <paper-checkbox id="toggleAll" on-checked-changed="_toggleAll"></paper-checkbox>
           </td>
         </template>
         <template is="dom-repeat" items="[[fields]]" as="field">
@@ -104,7 +123,7 @@ Polymer element for the Data Table component of Material Design
         </template>
       </tr>
       <template is="dom-repeat" items="[[data]]" as="row">
-        <tr class="data" on-click="_onRowClicked">
+        <tr class="data">
           <template is="dom-if" if="[[selectable]]">
             <td class="checkbox-container">
               <paper-checkbox on-checked-changed="_onSelectionChanged"></paper-checkbox>
@@ -150,28 +169,16 @@ Polymer element for the Data Table component of Material Design
               };
           }
 
-          ready() {
-              super.ready();
-              this.shadowRoot.querySelector('tr').addEventListener('click', (event) => console.log(event));
-          }
-
           _getDescription(field) {
               return field.description || field.name;
           }
 
           _getFieldFromRow(row, field) {
-              field.prefix = field.prefix || "";
-              field.suffix = field.suffix || "";
-              return field.prefix + row[field.name] + field.suffix;
+              return field.value(row);
           }
-
 
           _computeIsNumeric(field) {
               return field.type === Number ? "numeric" : "";
-          }
-
-          _onRowClicked(event) {
-              console.log(event);
           }
 
           _onSelectionChanged(event) {
@@ -180,12 +187,28 @@ Polymer element for the Data Table component of Material Design
               } else {
                   this.splice('selectedItems', this.selectedItems.indexOf(event.model.row), 1);
               }
+              if(this.selectedItems.length !== 0) {
+                  this._showTitleBar = false;
+                  this._selectionText = this._getSelectedCountAsString();
+              } else {
+                  this._showTitleBar = true;
+              }
           }
 
-          toggleAll() {
-              window.x = this;
+
+          _getSelectedCountAsString() {
+              if (this.selectedItems.length === 0) {
+                  return "No item selected";
+              } else if (this.selectedItems.length === 1) {
+                  return "1 item selected";
+              } else {
+                  return `${this.selectedItems.length} items selected`;
+              }
+          }
+
+          _toggleAll() {
               for (const checkbox of this.shadowRoot.querySelectorAll("paper-checkbox")) {
-                  checkbox.checked = this.$.toggleAll.checked;
+                  checkbox.checked = this.shadowRoot.getElementById('toggleAll').checked;
               }
           }
       }

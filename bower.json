@@ -2,8 +2,11 @@
   "name": "paper-data-table",
   "description": "Polymer element for the Data Table component of Material Design",
   "main": "paper-data-table.html",
+  "authors": [
+    "Afrish Khan S <ryanafrish7@gmail.com>"
+  ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0-rc.2",
+    "polymer": "Polymer/polymer#^2.0.0",
     "paper-styles": "^2.0.0",
     "paper-checkbox": "^2.0.0"
   },
@@ -12,7 +15,11 @@
     "web-component-tester": "^6.0.0-prerelease.5",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.5"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RyanAfrish7/paper-data-table.git"
+  },
   "resolutions": {
-    "polymer": "^2.0.0-rc.2"
+    "iron-flex-layout": "1 - 2"
   }
 }

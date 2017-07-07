@@ -23,153 +23,159 @@
     <template>
       <dom-bind>
         <template>
-          <paper-data-table title="Nutrition" fields="[[fields]]" data="[[data]]"></paper-data-table>
+          <paper-data-table title="Nutrition" fields="[[fields]]" data="[[data]]" selectable></paper-data-table>
         </template>
       </dom-bind>
     </template>
   </demo-snippet>
 </div>
 <script>
-    var autobind = document.querySelector('dom-bind');
+    const autobind = document.querySelector('dom-bind');
 
     autobind.fields = [
         {
             name: "Dessert (100g serving)",
-            type: String
+            type: String,
+            value: data => data.name
         },
         {
             name: "Calories",
             type: Number,
-            description: "The total amount of food energy in the given serving size."
+            description: "The total amount of food energy in the given serving size.",
+            value: data => data.energy
         },
         {
             name: "Fat (g)",
-            type: Number
+            type: Number,
+            value: data => data.fat
         },
         {
             name: "Carbs (g)",
-            type: Number
+            type: Number,
+            value: data => data.carbs
         },
         {
             name: "Protein (g)",
-            type: Number
+            type: Number,
+            value: data => data.protein
         },
         {
             name: "Sodium (mg)",
-            type: Number
+            type: Number,
+            value: data => data.sodium
         },
         {
             name: "Calcium (%)",
             type: Number,
-            suffix: "%"
+            value: data => `${data.calcium}%`
         },
         {
             name: "Iron (%)",
             type: Number,
-            suffix: "%"
+            value: data => `${data.iron}%`
         }
     ];
 
     autobind.data = [
         {
-            "Dessert (100g serving)": "Frozen yogurt",
-            "Calories": 159,
-            "Fat (g)": 6.0,
-            "Carbs (g)": 24,
-            "Protein (g)": 4.0,
-            "Sodium (mg)": 87,
-            "Calcium (%)": 14,
-            "Iron (%)": 1
+            "name": "Frozen yogurt",
+            "energy": 159,
+            "fat": 6.0,
+            "carbs": 24,
+            "protein": 4.0,
+            "sodium": 87,
+            "calcium": 14,
+            "iron": 1
         },
         {
-            "Dessert (100g serving)": "Ice cream sandwich",
-            "Calories": 237,
-            "Fat (g)": 9.0,
-            "Carbs (g)": 37,
-            "Protein (g)": 4.3,
-            "Sodium (mg)": 129,
-            "Calcium (%)": 8,
-            "Iron (%)": 1
+            "name": "Ice cream sandwich",
+            "energy": 237,
+            "fat": 9.0,
+            "carbs": 37,
+            "protein": 4.3,
+            "sodium": 129,
+            "calcium": 8,
+            "iron": 1
         },
         {
-            "Dessert (100g serving)": "Eclair",
-            "Calories": 262,
-            "Fat (g)": 16.0,
-            "Carbs (g)": 24,
-            "Protein (g)": 6.0,
-            "Sodium (mg)": 337,
-            "Calcium (%)": 6,
-            "Iron (%)": 7
+            "name": "Eclair",
+            "energy": 262,
+            "fat": 16.0,
+            "carbs": 24,
+            "protein": 6.0,
+            "sodium": 337,
+            "calcium": 6,
+            "iron": 7
         },
         {
-            "Dessert (100g serving)": "Cupcake",
-            "Calories": 305,
-            "Fat (g)": 3.7,
-            "Carbs (g)": 67,
-            "Protein (g)": 4.3,
-            "Sodium (mg)": 413,
-            "Calcium (%)": 3,
-            "Iron (%)": 8
+            "name": "Cupcake",
+            "energy": 305,
+            "fat": 3.7,
+            "carbs": 67,
+            "protein": 4.3,
+            "sodium": 413,
+            "calcium": 3,
+            "iron": 8
         },
         {
-            "Dessert (100g serving)": "Gingerbread",
-            "Calories": 356,
-            "Fat (g)": 16.0,
-            "Carbs (g)": 49,
-            "Protein (g)": 3.9,
-            "Sodium (mg)": 327,
-            "Calcium (%)": 7,
-            "Iron (%)": 16
+            "name": "Gingerbread",
+            "energy": 356,
+            "fat": 16.0,
+            "carbs": 49,
+            "protein": 3.9,
+            "sodium": 327,
+            "calcium": 7,
+            "iron": 16
         },
         {
-            "Dessert (100g serving)": "Eclair",
-            "Calories": 262,
-            "Fat (g)": 16.0,
-            "Carbs (g)": 24,
-            "Protein (g)": 6.0,
-            "Sodium (mg)": 337,
-            "Calcium (%)": 6,
-            "Iron (%)": 7
+            "name": "Eclair",
+            "energy": 262,
+            "fat": 16.0,
+            "carbs": 24,
+            "protein": 6.0,
+            "sodium": 337,
+            "calcium": 6,
+            "iron": 7
         },
         {
-            "Dessert (100g serving)": "Lollipop",
-            "Calories": 392,
-            "Fat (g)": 0.2,
-            "Carbs (g)": 98,
-            "Protein (g)": 0.0,
-            "Sodium (mg)": 38,
-            "Calcium (%)": 0,
-            "Iron (%)": 27
+            "name": "Lollipop",
+            "energy": 392,
+            "fat": 0.2,
+            "carbs": 98,
+            "protein": 0.0,
+            "sodium": 38,
+            "calcium": 0,
+            "iron": 27
         },
         {
-            "Dessert (100g serving)": "Honeycomb",
-            "Calories": 408,
-            "Fat (g)": 3.2,
-            "Carbs (g)": 87,
-            "Protein (g)": 6.5,
-            "Sodium (mg)": 562,
-            "Calcium (%)": 0,
-            "Iron (%)": 45
+            "name": "Honeycomb",
+            "energy": 408,
+            "fat": 3.2,
+            "carbs": 87,
+            "protein": 6.5,
+            "sodium": 562,
+            "calcium": 0,
+            "iron": 45
         },
         {
-            "Dessert (100g serving)": "Donut",
-            "Calories": 452,
-            "Fat (g)": 25.0,
-            "Carbs (g)": 51,
-            "Protein (g)": 4.9,
-            "Sodium (mg)": 326,
-            "Calcium (%)": 2,
-            "Iron (%)": 22
+            "name": "Donut",
+            "energy": 452,
+            "fat": 25.0,
+            "carbs": 51,
+            "protein": 4.9,
+            "sodium": 326,
+            "calcium": 2,
+            "iron": 22
         },
         {
-            "Dessert (100g serving)": "KitKat",
-            "Calories": 518,
-            "Fat (g)": 26.0,
-            "Carbs (g)": 65,
-            "Protein (g)": 7.0,
-            "Sodium (mg)": 54,
-            "Calcium (%)": 12,
-            "Iron (%)": 6
+            "name": "KitKat",
+            "energy": 518,
+            "fat": 26.0,
+            "carbs": 65,
+            "protein": 7.0,
+            "sodium": 54,
+            "calcium": 12,
+            "iron": 6
         }
     ];
 </script>
