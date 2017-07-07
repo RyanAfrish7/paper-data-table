@@ -1,0 +1,195 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<link rel="import" href="../paper-styles/typography.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<!--<link rel="import" href="../polymer/lib/elements/dom-if.html">-->
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+
+<!--
+`paper-data-table`
+Polymer element for the Data Table component of Material Design
+
+@demo demo/index.html
+-->
+
+<dom-module id="paper-data-table">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply --paper-font-common-base;
+      }
+
+      .title {
+        @apply --paper-font-title;
+        font-weight: normal;
+        line-height: 64px;
+        margin-left: 24px;
+      }
+
+      paper-checkbox {
+        width: 18px;
+        height: 18px;
+        vertical-align: text-bottom;
+      }
+
+      table {
+        /*border-spacing: 24px 0;*/
+        border-collapse: collapse;
+      / / width: 100 %;
+      }
+
+      td, th {
+        padding: 0;
+        border-left: 56px solid transparent;
+        border-right: 56px solid transparent;
+      }
+
+      td.checkbox-container, th.checkbox-container, td.checkbox-container + td, th.checkbox-container + td {
+        border-left: 24px solid transparent;
+        border-right: 24px solid transparent;
+      }
+
+      td:first-of-type {
+        padding-left: 24px;
+        border-left: 0 solid transparent;
+      }
+
+      td:last-of-type {
+        padding-right: 24px;
+        border-right: 0 solid transparent;
+      }
+
+      tr {
+        border-bottom: 1px solid #dedede;
+      }
+
+      tr:hover {
+        background-color: #EEEEEE;
+      }
+
+      tr.header:hover {
+        background-color: inherit;
+      }
+
+      tr > td {
+        font-size: 13px;
+        line-height: 48px;
+      }
+
+      tr.header > td {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.54);
+        line-height: 56px;
+        font-weight: 500;
+      }
+
+      td.numeric {
+        text-align: end;
+      }
+
+    </style>
+
+    <div class="title">[[title]]</div>
+    <table>
+      <tbody>
+      <tr class="header">
+        <template is="dom-if" if="[[selectable]]">
+          <td class="checkbox-container">
+            <paper-checkbox id="toggleAll" on-checked-changed="toggleAll"></paper-checkbox>
+          </td>
+        </template>
+        <template is="dom-repeat" items="[[fields]]" as="field">
+          <td class$="field [[_computeIsNumeric(field)]]" title$="[[_getDescription(field)]]">[[field.name]]</td>
+        </template>
+      </tr>
+      <template is="dom-repeat" items="[[data]]" as="row">
+        <tr class="data" on-click="_onRowClicked">
+          <template is="dom-if" if="[[selectable]]">
+            <td class="checkbox-container">
+              <paper-checkbox on-checked-changed="_onSelectionChanged"></paper-checkbox>
+            </td>
+          </template>
+          <template is="dom-repeat" items="[[fields]]" as="field">
+            <td class$="field [[_computeIsNumeric(field)]]" title$="[[_getDescription(field)]]">[[_getFieldFromRow(row,
+              field)]]
+            </td>
+          </template>
+        </tr>
+      </template>
+      </tbody>
+    </table>
+
+  </template>
+
+  <script>
+      /** @polymerElement */
+      class PaperDataTable extends Polymer.Element {
+
+          static get is() {
+              return 'paper-data-table';
+          }
+
+          static get properties() {
+              return {
+                  selectedItems: {
+                      type: Array,
+                      value: () => [],
+                      reflectToAttribute: true,
+                      readOnly: true
+                  },
+
+                  selectable: {
+                      type: Boolean,
+                      value: false
+                  },
+
+                  title: {
+                      type: String
+                  }
+              };
+          }
+
+          ready() {
+              super.ready();
+              this.shadowRoot.querySelector('tr').addEventListener('click', (event) => console.log(event));
+          }
+
+          _getDescription(field) {
+              return field.description || field.name;
+          }
+
+          _getFieldFromRow(row, field) {
+              field.prefix = field.prefix || "";
+              field.suffix = field.suffix || "";
+              return field.prefix + row[field.name] + field.suffix;
+          }
+
+
+          _computeIsNumeric(field) {
+              return field.type === Number ? "numeric" : "";
+          }
+
+          _onRowClicked(event) {
+              console.log(event);
+          }
+
+          _onSelectionChanged(event) {
+              if (event.detail.value === true) {
+                  this.push('selectedItems', event.model.row);
+              } else {
+                  this.splice('selectedItems', this.selectedItems.indexOf(event.model.row), 1);
+              }
+          }
+
+          toggleAll() {
+              window.x = this;
+              for (const checkbox of this.shadowRoot.querySelectorAll("paper-checkbox")) {
+                  checkbox.checked = this.$.toggleAll.checked;
+              }
+          }
+      }
+
+      window.customElements.define(PaperDataTable.is, PaperDataTable);
+  </script>
+</dom-module>
